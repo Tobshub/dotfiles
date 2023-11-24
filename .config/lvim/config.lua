@@ -1,10 +1,10 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-lvim.colorscheme = "colorbuddy"
+lvim.colorscheme = "base16-catppuccin-macchiato"
 
-require("colorbuddy").colorscheme("tsodingbuddy")
-require("colorizer").setup()
+-- require("colorbuddy").colorscheme("tsodingbuddy")
+-- require("colorizer").setup()
 
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
@@ -218,7 +218,7 @@ lvim.plugins = {
       vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
     end
   },
-  { "jay-babu/mason-nvim-dap.nvim", dependencies = "williamboman/mason.nvim" }
+  { "jay-babu/mason-nvim-dap.nvim", dependencies = "williamboman/mason.nvim" },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
