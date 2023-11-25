@@ -35,6 +35,12 @@ require('lspconfig.ui.windows').default_options.border = "single"
 lvim.builtin.lir.show_hidden_files = true
 lvim.builtin.lir.ignore = {}
 
+lvim.builtin.telescope.defaults.layout_strategy = "flex"
+lvim.builtin.telescope.defaults.layout_config = {
+  horizontal = { width = 0.8, height = 0.8 },
+  vertical = { width = 0.8, height = 0.8 },
+}
+
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
 vim.opt.foldlevel = 99
