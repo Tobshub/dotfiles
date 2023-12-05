@@ -16,6 +16,7 @@ alias vim="lvim ."
 alias docker="sudo docker"
 alias x="clear"
 alias lg="lazygit"
+alias g="git"
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
