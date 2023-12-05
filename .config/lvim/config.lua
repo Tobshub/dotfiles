@@ -1,10 +1,10 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-lvim.colorscheme = "base16-catppuccin-macchiato"
+lvim.colorscheme = "colorbuddy"
 
--- require("colorbuddy").colorscheme("tsodingbuddy")
--- require("colorizer").setup()
+require("colorbuddy").colorscheme("tsodingbuddy")
+require("colorizer").setup()
 
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true

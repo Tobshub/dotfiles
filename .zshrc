@@ -49,7 +49,7 @@ ZSH_THEME="candy"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
 
 # catppuccin theme
-source $ZSH/custom/catppuccin_macchiato-zsh-syntax-highlighting.zsh
+# source $ZSH/custom/catppuccin_macchiato-zsh-syntax-highlighting.zsh
 
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
