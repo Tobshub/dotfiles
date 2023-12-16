@@ -36,9 +36,12 @@ lvim.builtin.lir.show_hidden_files = true
 lvim.builtin.lir.ignore = {}
 
 lvim.builtin.telescope.defaults.layout_strategy = "flex"
-lvim.builtin.telescope.defaults.layout_config = {
-  horizontal = { width = 0.8, height = 0.8 },
-  vertical = { width = 0.8, height = 0.8 },
+lvim.builtin.telescope.defaults.layout_config.horizontal = { width = 0.8, height = 0.8, }
+lvim.builtin.telescope.defaults.layout_config.vertical = { width = 0.8, height = 0.8 }
+lvim.builtin.telescope.defaults.borderchars = {
+  prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+  results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+  preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 }
 
 vim.opt.foldmethod = "expr"
