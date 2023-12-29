@@ -1,9 +1,10 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-lvim.colorscheme = "colorbuddy"
+vim.g.vim_monokai_tasty_machine_tint = 1
+lvim.colorscheme = "vim-monokai-tasty"
 
-require("colorbuddy").colorscheme("tsodingbuddy")
+-- require("colorbuddy").colorscheme("tsodingbuddy")
 require("colorizer").setup()
 
 vim.opt.relativenumber = true
@@ -228,11 +229,12 @@ lvim.plugins = {
     end
   },
   { "jay-babu/mason-nvim-dap.nvim", dependencies = "williamboman/mason.nvim" },
+  { "tobshub/vim-monokai-tasty" },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.json", "*.jsonc", ".env", "*.md" },
+  pattern = { "*.json", "*.jsonc", ".env", "*.md", "*txt" },
   command = "setlocal wrap",
 })
 
