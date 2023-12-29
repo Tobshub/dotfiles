@@ -53,6 +53,8 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ to
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 # bindsym XF86AudioPlay exec --no-startup-id pactl suspend-sink @DEFAULT_SINK@ toggle
 
+# Notifications
+bindsym $mod+grave exec --no-startup-id dunstctl history-pop
 
 # screenshoting
 bindsym $mod+Print exec flameshot gui
