@@ -12,7 +12,7 @@ export EDITOR="/home/tobs/.local/bin/nvim"
 export GOPROXY="proxy.golang.org"
 
 alias p="pnpm"
-alias vim="lvim ."
+alias e="lvim ."
 alias docker="sudo docker"
 alias x="clear"
 alias lg="lazygit"
