@@ -1,7 +1,6 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-vim.g.vim_monokai_tasty_machine_tint = 1
 lvim.colorscheme = "vim-monokai-tasty"
 
 -- require("colorbuddy").colorscheme("tsodingbuddy")
@@ -17,7 +16,14 @@ vim.opt.background = "dark"
 vim.opt.shell = "zsh"
 vim.opt.colorcolumn = "100"
 
+vim.opt.list = true
+vim.opt.listchars:append("extends:<")
+vim.opt.listchars:append("precedes:>")
+vim.opt.listchars:append("tab:» ")
+
 vim.diagnostic.config({ virtual_text = false })
+
+vim.g.navic_silence = true
 
 lvim.builtin.cmp.formatting.max_width = 40
 
@@ -26,10 +32,13 @@ lvim.builtin.terminal.persist_size = true
 lvim.builtin.terminal.size = 12
 
 -- lvim.builtin.autopairs.enable_moveright = false
-lvim.builtin.autopairs.active = false
+-- lvim.builtin.autopairs.active = false
 
-lvim.builtin.indentlines.options.char = "»"
-lvim.builtin.indentlines.options.context_char = "»"
+vim.list_extend(lvim.builtin.breadcrumbs.winbar_filetype_exclude, { "astro" })
+
+lvim.builtin.indentlines.active = false
+-- lvim.builtin.indentlines.options.char = "»"
+-- lvim.builtin.indentlines.options.context_char = "»"
 
 require('lspconfig.ui.windows').default_options.border = "single"
 
@@ -202,7 +211,7 @@ formatters.setup {
     { "--print-width", "120" },
     ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
     filetypes = { "astro", "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss", "sass",
-      "yaml", "json", "mdx", "md" },
+      "yaml", "json", "mdx", "md", "vue" },
   },
   { command = "gofumpt", { "-lw" }, filetypes = { "go" } },
 }
@@ -254,5 +263,14 @@ vim.api.nvim_create_autocmd("BufEnter", {
   callback = function()
     vim.opt_local.tabstop = 4
     vim.opt_local.shiftwidth = 4
+  end
+})
+
+-- turn off nvim-navic in astro files
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.astro" },
+  callback = function()
+    lvim.builtin.breadcrumbs.active = false
+    vim.g.navic_silence = true
   end
 })
