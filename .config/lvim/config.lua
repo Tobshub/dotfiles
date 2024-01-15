@@ -19,7 +19,12 @@ vim.opt.colorcolumn = "100"
 vim.opt.list = true
 vim.opt.listchars:append("extends:<")
 vim.opt.listchars:append("precedes:>")
-vim.opt.listchars:append("tab:» ")
+-- vim.opt.listchars:append("tab:» ")
+-- vim.opt.listchars:append("tab:• ")
+
+-- lvim.builtin.indentlines.active = false
+lvim.builtin.indentlines.options.char = "•"
+lvim.builtin.indentlines.options.context_char = "•"
 
 vim.diagnostic.config({ virtual_text = false })
 
@@ -35,10 +40,6 @@ lvim.builtin.terminal.size = 12
 -- lvim.builtin.autopairs.active = false
 
 vim.list_extend(lvim.builtin.breadcrumbs.winbar_filetype_exclude, { "astro" })
-
-lvim.builtin.indentlines.active = false
--- lvim.builtin.indentlines.options.char = "»"
--- lvim.builtin.indentlines.options.context_char = "»"
 
 require('lspconfig.ui.windows').default_options.border = "single"
 
@@ -243,6 +244,10 @@ lvim.plugins = {
   { "norcalli/nvim-colorizer.lua" },
   {
     "Exafunction/codeium.vim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
     config = function()
       vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
     end
