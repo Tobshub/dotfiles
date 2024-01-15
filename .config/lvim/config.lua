@@ -31,6 +31,17 @@ vim.diagnostic.config({ virtual_text = false })
 vim.g.navic_silence = true
 
 lvim.builtin.cmp.formatting.max_width = 40
+lvim.builtin.cmp.window.completion.border = nil
+lvim.builtin.cmp.window.documentation.border = nil
+lvim.builtin.cmp.window.completion.winhighlight = "Normal:Pmenu"
+
+lvim.builtin.luasnip.sources.friendly_snippets = false
+vim.list_extend(lvim.builtin.cmp.sources, { { name = "codeium" } })
+lvim.builtin.cmp.cmdline.enable = true
+
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+  vim.lsp.handlers.hover, { border = "single", }
+)
 
 lvim.builtin.terminal.direction = "horizontal"
 lvim.builtin.terminal.persist_size = true
