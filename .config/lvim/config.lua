@@ -13,7 +13,7 @@ vim.opt.sidescrolloff = 2
 vim.opt.scrolloff = 5
 vim.opt.clipboard = "unnamed"
 vim.opt.background = "dark"
-vim.opt.shell = "zsh"
+vim.opt.shell = "/usr/bin/bash"
 vim.opt.colorcolumn = "100"
 
 vim.opt.list = true
