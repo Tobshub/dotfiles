@@ -1,5 +1,3 @@
-setxkbmap -option caps:escape
-
 source $HOME/.profile_env
 
 . "$HOME/.cargo/env"
