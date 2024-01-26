@@ -1,4 +1,4 @@
-setxkbmap -option caps:escape
+setxkbmap -option caps:escape_shifted_capslock
 
 source $HOME/.profile_env
 
