@@ -17,7 +17,7 @@ export GOPROXY="proxy.golang.org"
 alias docker="sudo docker"
 alias x="clear"
 alias lg="lazygit"
-alias g="git"
+alias g="git --no-pager"
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
@@ -26,11 +26,11 @@ e() {
 }
 
 p() {
-  if [[ -e "package.json" ]]; then
-    npm $1
+  if [[ -e "package-lock.json" ]]; then
+    npm $@
   elif [[ -e "yarn.lock" ]]; then
-    yarn $1
+    yarn $@
   else
-    pnpm $1
+    pnpm $@
   fi
 }
