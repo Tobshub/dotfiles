@@ -13,20 +13,24 @@ vim.opt.sidescrolloff = 2
 vim.opt.scrolloff = 5
 vim.opt.clipboard = "unnamed"
 vim.opt.background = "dark"
-vim.opt.shell = "/usr/bin/bash"
-vim.opt.colorcolumn = "100"
+vim.opt.shell = "/usr/bin/zsh"
+vim.opt.colorcolumn = "80"
+vim.opt.expandtab = false
 
 vim.opt.list = true
 vim.opt.listchars:append("extends:<")
 vim.opt.listchars:append("precedes:>")
 -- vim.opt.listchars:append("tab:» ")
 -- vim.opt.listchars:append("tab:• ")
+vim.opt.listchars:append("tab:  ")
 
 -- lvim.builtin.indentlines.active = false
-lvim.builtin.indentlines.options.char = "•"
-lvim.builtin.indentlines.options.context_char = "•"
+lvim.builtin.indentlines.options.char = ""
+lvim.builtin.indentlines.options.context_char = "|"
 
-vim.diagnostic.config({ virtual_text = false })
+lvim.builtin.illuminate.active = false
+
+vim.diagnostic.config({ virtual_text = false, float = { border = "single" } })
 
 vim.g.navic_silence = true
 
@@ -34,13 +38,14 @@ lvim.builtin.cmp.formatting.max_width = 40
 lvim.builtin.cmp.window.completion.border = nil
 lvim.builtin.cmp.window.documentation.border = nil
 lvim.builtin.cmp.window.completion.winhighlight = "Normal:Pmenu"
+lvim.builtin.cmp.window.documentation.border = "single"
+lvim.builtin.cmp.window.documentation.winhighlight = "Normal:Pmenu"
 
 lvim.builtin.luasnip.sources.friendly_snippets = false
-vim.list_extend(lvim.builtin.cmp.sources, { { name = "codeium" } })
 lvim.builtin.cmp.cmdline.enable = true
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-  vim.lsp.handlers.hover, { border = "single", }
+	vim.lsp.handlers.hover, { border = "single" }
 )
 
 lvim.builtin.terminal.direction = "horizontal"
@@ -61,9 +66,9 @@ lvim.builtin.telescope.defaults.layout_strategy = "flex"
 lvim.builtin.telescope.defaults.layout_config.horizontal = { width = 0.8, height = 0.8, }
 lvim.builtin.telescope.defaults.layout_config.vertical = { width = 0.8, height = 0.8 }
 lvim.builtin.telescope.defaults.borderchars = {
-  prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-  results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-  preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+	prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+	results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+	preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 }
 
 vim.opt.foldmethod = "expr"
@@ -75,19 +80,37 @@ vim.g.codeium_no_map_tab = true
 
 local mndap = require("mason-nvim-dap")
 mndap.setup({
-  handlers = {
-    function(config)
-      mndap.default_setup(config)
-    end
-  }
+	handlers = {
+		function(config)
+			mndap.default_setup(config)
+		end
+	}
+})
+
+local mlspconf = require("mason-lspconfig")
+mlspconf.setup_handlers({
+	function(server_name)
+		require("lvim.lsp.manager").setup(server_name, {})
+	end,
+	["rust_analyzer"] = function()
+		require("lvim.lsp.manager").setup("rust_analyzer", {
+			settings = {
+				["rust-analyzer"] = {
+					check = {
+						command = "clippy",
+					},
+				}
+			}
+		})
+	end
 })
 
 lvim.builtin.lualine.style = "lvim"
 lvim.builtin.lualine.sections.lualine_a = {
-  "mode",
+	"mode",
 }
 lvim.builtin.lualine.sections.lualine_c = {
-  { "filename", path = 1 }
+	{ "filename", path = 1 }
 }
 
 lvim.transparent_window = false
@@ -102,10 +125,10 @@ lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 vim.keymap.set("v", "<S-y>", "\"+y", { noremap = true })
 
 lvim.builtin.which_key.mappings["l"]["f"] = {
-  function()
-    require("lvim.lsp.utils").format { timeout_ms = 2000 }
-  end,
-  "Format",
+	function()
+		require("lvim.lsp.utils").format { timeout_ms = 2000 }
+	end,
+	"Format",
 }
 
 -- lvim.builtin.which_key.mappings["t"] = {
@@ -142,18 +165,18 @@ lvim.builtin.nvimtree.setup.renderer.indent_markers.enable = true
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-  "bash",
-  "c",
-  "javascript",
-  "json",
-  "lua",
-  "python",
-  "typescript",
-  "tsx",
-  "css",
-  "rust",
-  "yaml",
-  "html",
+	"bash",
+	"c",
+	"javascript",
+	"json",
+	"lua",
+	"python",
+	"typescript",
+	"tsx",
+	"css",
+	"rust",
+	"yaml",
+	"html",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
@@ -185,20 +208,11 @@ lvim.builtin.treesitter.highlight.enable = true
 -- local opts = {} -- check the lspconfig documentation for a list of all possible options
 -- require("lvim.lsp.manager").setup("pyright", opts)
 --
-require("lvim.lsp.manager").setup("rust_analyzer", {
-  settings = {
-    ["rust-analyzer"] = {
-      check = {
-        command = "clippy",
-      }
-    }
-  }
-})
 
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
 lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-  return server ~= "eslintls"
+	return server ~= "eslintls"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
@@ -215,17 +229,17 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-  -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
-  {
-    command = "prettier",
-    ---@usage arguments to pass to the formatter
-    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
-    { "--print-width", "120" },
-    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-    filetypes = { "astro", "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss", "sass",
-      "yaml", "json", "mdx", "md", "vue" },
-  },
-  { command = "gofumpt", { "-lw" }, filetypes = { "go" } },
+	-- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+	{
+		command = "prettier",
+		---@usage arguments to pass to the formatter
+		-- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+		{ "--print-width", "120" },
+		---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+		filetypes = { "astro", "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss", "sass",
+			"yaml", "json", "mdx", "md", "vue" },
+	},
+	{ command = "gofumpt", { "-lw" }, filetypes = { "go" } },
 }
 
 -- -- set additional linters
@@ -248,45 +262,46 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
-  { "windwp/nvim-ts-autotag" },
-  { "RRethy/nvim-base16" },
-  { "tjdevries/colorbuddy.nvim" },
-  { "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
-  { "norcalli/nvim-colorizer.lua" },
-  {
-    "Exafunction/codeium.vim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "hrsh7th/nvim-cmp",
-    },
-    config = function()
-      vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
-    end
-  },
-  { "jay-babu/mason-nvim-dap.nvim", dependencies = "williamboman/mason.nvim" },
-  { "tobshub/vim-monokai-tasty" },
+	{ "windwp/nvim-ts-autotag" },
+	{ "RRethy/nvim-base16" },
+	{ "tjdevries/colorbuddy.nvim" },
+	{ "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
+	{ "norcalli/nvim-colorizer.lua" },
+	{
+		"Exafunction/codeium.vim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"hrsh7th/nvim-cmp",
+		},
+		config = function()
+			vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
+		end
+	},
+	{ "jay-babu/mason-nvim-dap.nvim",      dependencies = "williamboman/mason.nvim" },
+	{ "williamboman/mason-lspconfig.nvim", dependencies = "williamboman/mason.nvim" },
+	{ "tobshub/vim-monokai-tasty" },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.json", "*.jsonc", ".env", "*.md", "*txt" },
-  command = "setlocal wrap",
+	pattern = { "*.json", "*.jsonc", ".env", "*.md", "*txt" },
+	command = "setlocal wrap",
 })
 
 -- set tabstop and shiftwidth to 4
 vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.go", "*.c", "*.h", "*.cpp", "*.hpp", "*.cc", "*.cxx", "*.rs" },
-  callback = function()
-    vim.opt_local.tabstop = 4
-    vim.opt_local.shiftwidth = 4
-  end
+	pattern = { "*.go", "*.c", "*.h", "*.cpp", "*.hpp", "*.cc", "*.cxx", "*.rs" },
+	callback = function()
+		vim.opt_local.tabstop = 4
+		vim.opt_local.shiftwidth = 4
+	end
 })
 
 -- turn off nvim-navic in astro files
 vim.api.nvim_create_autocmd("BufEnter", {
-  pattern = { "*.astro" },
-  callback = function()
-    lvim.builtin.breadcrumbs.active = false
-    vim.g.navic_silence = true
-  end
+	pattern = { "*.astro" },
+	callback = function()
+		lvim.builtin.breadcrumbs.active = false
+		vim.g.navic_silence = true
+	end
 })
