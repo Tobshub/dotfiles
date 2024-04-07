@@ -1,7 +1,26 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = true
-lvim.colorscheme = "vim-monokai-tasty"
+lvim.colorscheme = "material"
+
+vim.g.material_style = "darker"
+
+require('material').setup({
+	contrast = {
+		terminal = true,
+		sidebars = true,
+		floating_windows = true,
+		non_current_windows = true,
+	},
+	plugins = {
+		"nvim-cmp", "nvim-tree", "nvim-web-devicons",
+		"dap", "dashboard", "gitsigns", "telescope", "which-key"
+	},
+	high_visibility = {
+		darker = true
+	},
+	lualine_style = "stealth"
+})
 
 -- require("colorbuddy").colorscheme("tsodingbuddy")
 require("colorizer").setup()
@@ -24,22 +43,19 @@ vim.opt.listchars:append("precedes:>")
 -- vim.opt.listchars:append("tab:• ")
 vim.opt.listchars:append("tab:  ")
 
--- lvim.builtin.indentlines.active = false
+lvim.builtin.indentlines.active = true
 lvim.builtin.indentlines.options.char = ""
-lvim.builtin.indentlines.options.context_char = "|"
+lvim.builtin.indentlines.options.context_char = "│"
 
 lvim.builtin.illuminate.active = false
 
 vim.diagnostic.config({ virtual_text = false, float = { border = "single" } })
 
-vim.g.navic_silence = true
-
 lvim.builtin.cmp.formatting.max_width = 40
-lvim.builtin.cmp.window.completion.border = nil
-lvim.builtin.cmp.window.documentation.border = nil
-lvim.builtin.cmp.window.completion.winhighlight = "Normal:Pmenu"
+lvim.builtin.cmp.window.completion.border = "single"
+-- lvim.builtin.cmp.window.completion.winhighlight = "Normal:Pmenu"
 lvim.builtin.cmp.window.documentation.border = "single"
-lvim.builtin.cmp.window.documentation.winhighlight = "Normal:Pmenu"
+-- lvim.builtin.cmp.window.documentation.winhighlight = "Normal:Pmenu"
 
 lvim.builtin.luasnip.sources.friendly_snippets = false
 lvim.builtin.cmp.cmdline.enable = true
@@ -55,7 +71,9 @@ lvim.builtin.terminal.size = 12
 -- lvim.builtin.autopairs.enable_moveright = false
 -- lvim.builtin.autopairs.active = false
 
+lvim.builtin.breadcrumbs.active = true
 vim.list_extend(lvim.builtin.breadcrumbs.winbar_filetype_exclude, { "astro" })
+vim.g.navic_silence = true
 
 require('lspconfig.ui.windows').default_options.border = "single"
 
@@ -65,11 +83,16 @@ lvim.builtin.lir.ignore = {}
 lvim.builtin.telescope.defaults.layout_strategy = "flex"
 lvim.builtin.telescope.defaults.layout_config.horizontal = { width = 0.8, height = 0.8, }
 lvim.builtin.telescope.defaults.layout_config.vertical = { width = 0.8, height = 0.8 }
-lvim.builtin.telescope.defaults.borderchars = {
-	prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-	results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
-	preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-}
+lvim.builtin.telescope.theme = nil
+-- lvim.builtin.telescope.defaults.borderchars = {
+-- 	prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+-- 	results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+-- 	preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+-- }
+
+-- lvim.builtin.telescope.on_config_done = function(telescope)
+-- 	pcall(telescope.load_extension, "fzy-native")
+-- end
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -105,13 +128,14 @@ mlspconf.setup_handlers({
 	end
 })
 
+lvim.builtin.lualine.options.theme = "material"
+local lualinecmpnts = require("lvim.core.lualine.components")
 lvim.builtin.lualine.style = "lvim"
-lvim.builtin.lualine.sections.lualine_a = {
-	"mode",
-}
+lvim.builtin.lualine.sections.lualine_a = { "mode" }
 lvim.builtin.lualine.sections.lualine_c = {
-	{ "filename", path = 1 }
+	lualinecmpnts.diff, { "filename", path = 3 }
 }
+lvim.builtin.lualine.sections.lualine_x = { lualinecmpnts.diagnostics }
 
 lvim.transparent_window = false
 
@@ -122,6 +146,8 @@ lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
 lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
 lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 
+vim.keymap.set({ "i", "t" }, "<C-l>", "<Del>")
+vim.keymap.set("t", "<C-h>", "<BackSpace>")
 vim.keymap.set("v", "<S-y>", "\"+y", { noremap = true })
 
 lvim.builtin.which_key.mappings["l"]["f"] = {
@@ -144,6 +170,20 @@ lvim.builtin.which_key.mappings["l"]["f"] = {
 -- }
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true })
+vim.keymap.set("n", "<C-cr>", function()
+	local win = vim.api.nvim_get_current_win()
+	local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
+	if (name == nil or name == "") then
+		local key = vim.api.nvim_replace_termcodes("<cr>", true, false, true)
+		vim.api.nvim_feedkeys(key, "n", false)
+		vim.api.nvim_create_autocmd("BufLeave", {
+			once = true,
+			callback = function()
+				vim.api.nvim_win_close(win, true)
+			end,
+		})
+	end
+end, { noremap = true })
 
 -- unmap a default keymapping
 -- vim.keymap.del("n", "<C-Up>")
@@ -181,6 +221,17 @@ lvim.builtin.treesitter.ensure_installed = {
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
+
+require('treesitter-context').setup({
+	enable = true,
+	max_lines = 4,
+	min_window_height = 0,
+	line_numbers = true,
+	multiline_threshold = 20,
+	trim_scope = 'outer',
+	mode = 'cursor',
+	zindex = 20
+})
 
 
 -- generic LSP settings
@@ -277,9 +328,17 @@ lvim.plugins = {
 			vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
 		end
 	},
-	{ "jay-babu/mason-nvim-dap.nvim",      dependencies = "williamboman/mason.nvim" },
-	{ "williamboman/mason-lspconfig.nvim", dependencies = "williamboman/mason.nvim" },
+	{ "jay-babu/mason-nvim-dap.nvim",           dependencies = "williamboman/mason.nvim" },
+	{ "williamboman/mason-lspconfig.nvim",      dependencies = "williamboman/mason.nvim" },
 	{ "tobshub/vim-monokai-tasty" },
+	{ "Mofiqul/vscode.nvim" },
+	{ "nvim-treesitter/nvim-treesitter-context" },
+	{ "marko-cerovac/material.nvim" }
+	-- {
+	-- 	"nvim-telescope/telescope-fzy-native.nvim",
+	-- 	build = "make",
+	-- 	event = "BufRead"
+	-- },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
