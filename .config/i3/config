@@ -67,7 +67,7 @@ floating_modifier $mod
 bindsym $mod+Return exec /home/tobs/.local/bin/kitty
 
 # start a browser
-bindsym XF86HomePage exec firefox
+bindsym XF86HomePage exec /home/tobs/.local/share/firefox/firefox
 
 # start file explorer
 bindsym XF86Calculator exec nautilus
