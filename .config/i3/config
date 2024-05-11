@@ -70,7 +70,7 @@ bindsym $mod+Return exec /home/tobs/.local/bin/kitty
 bindsym XF86HomePage exec firefox
 
 # start file explorer
-bindsym XF86Calculator exec flatpak run org.kde.dolphin
+bindsym XF86Calculator exec nautilus
 
 focus_follows_mouse no
 
