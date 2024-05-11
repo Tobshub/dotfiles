@@ -14,6 +14,8 @@ export EDITOR="/home/tobs/.local/bin/nvim"
 
 export GOPROXY="proxy.golang.org"
 
+export ANDROID_HOME="/home/tobs/Android/Sdk"
+
 alias docker="sudo docker"
 alias x="clear"
 alias lg="lazygit"
@@ -30,6 +32,8 @@ p() {
     npm $@
   elif [[ -e "yarn.lock" ]]; then
     yarn $@
+  elif [[ -e "bun.lockb" ]]; then
+    bun $@
   else
     pnpm $@
   fi
