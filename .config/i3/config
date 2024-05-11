@@ -31,7 +31,10 @@ exec --no-startup-id xset r rate 200 22
 # they are included here as an example. Modify as you see fit.
 
 # change the screensaver timeout
-exec --no-startup-id xset s 1800
+exec --no-startup-id xset s off
+#disable dpms
+exec --no-startup-id xset -dpms
+
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork -c 1A1A1B
