@@ -1,28 +1,28 @@
 -- general
 lvim.log.level = "warn"
-lvim.format_on_save = true
-lvim.colorscheme = "material"
+lvim.format_on_save = false
+lvim.colorscheme = "tsodingbuddy"
 
-vim.g.material_style = "darker"
+-- vim.g.material_style = "darker"
 
-require('material').setup({
-	contrast = {
-		terminal = true,
-		sidebars = true,
-		floating_windows = true,
-		non_current_windows = true,
-	},
-	plugins = {
-		"nvim-cmp", "nvim-tree", "nvim-web-devicons",
-		"dap", "dashboard", "gitsigns", "telescope", "which-key"
-	},
-	high_visibility = {
-		darker = true
-	},
-	lualine_style = "stealth"
-})
+-- require('material').setup({
+-- 	contrast = {
+-- 		terminal = true,
+-- 		sidebars = true,
+-- 		floating_windows = true,
+-- 		non_current_windows = false,
+-- 	},
+-- 	plugins = {
+-- 		"nvim-cmp", "nvim-tree", "nvim-web-devicons",
+-- 		"dap", "dashboard", "gitsigns", "telescope", "which-key"
+-- 	},
+-- 	high_visibility = {
+-- 		darker = true
+-- 	},
+-- 	lualine_style = "stealth"
+-- })
 
--- require("colorbuddy").colorscheme("tsodingbuddy")
+require("colorbuddy").colorscheme("tsodingbuddy")
 require("colorizer").setup()
 
 vim.opt.relativenumber = true
@@ -45,7 +45,7 @@ vim.opt.listchars:append("tab:  ")
 
 lvim.builtin.indentlines.active = true
 lvim.builtin.indentlines.options.char = ""
-lvim.builtin.indentlines.options.context_char = "│"
+lvim.builtin.indentlines.options.context_char = "•"
 
 lvim.builtin.illuminate.active = false
 
@@ -83,6 +83,7 @@ lvim.builtin.lir.ignore = {}
 lvim.builtin.telescope.defaults.layout_strategy = "flex"
 lvim.builtin.telescope.defaults.layout_config.horizontal = { width = 0.8, height = 0.8, }
 lvim.builtin.telescope.defaults.layout_config.vertical = { width = 0.8, height = 0.8 }
+lvim.builtin.telescope.defaults.layout_config.prompt_position = "top"
 lvim.builtin.telescope.theme = nil
 -- lvim.builtin.telescope.defaults.borderchars = {
 -- 	prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
@@ -128,7 +129,7 @@ mlspconf.setup_handlers({
 	end
 })
 
-lvim.builtin.lualine.options.theme = "material"
+-- lvim.builtin.lualine.options.theme = "auto"
 local lualinecmpnts = require("lvim.core.lualine.components")
 lvim.builtin.lualine.style = "lvim"
 lvim.builtin.lualine.sections.lualine_a = { "mode" }
@@ -149,6 +150,7 @@ lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
 vim.keymap.set({ "i", "t" }, "<C-l>", "<Del>")
 vim.keymap.set("t", "<C-h>", "<BackSpace>")
 vim.keymap.set("v", "<S-y>", "\"+y", { noremap = true })
+vim.keymap.set("n", "<C-;>", "q:")
 
 lvim.builtin.which_key.mappings["l"]["f"] = {
 	function()
@@ -202,6 +204,14 @@ lvim.builtin.nvimtree.setup.view.side = "right"
 lvim.builtin.nvimtree.setup.renderer.icons.show.git = true
 lvim.builtin.nvimtree.setup.renderer.indent_markers.enable = true
 -- lvim.builtin.nvimtree.setup.view.float.enable = true
+lvim.builtin.nvimtree.setup.update_cwd = false
+lvim.builtin.nvimtree.setup.actions.change_dir.enable = false
+lvim.builtin.nvimtree.setup.sync_root_with_cwd = false
+lvim.builtin.nvimtree.setup.respect_buf_cwd = false
+lvim.builtin.nvimtree.setup.prefer_startup_root = true
+lvim.builtin.nvimtree.setup.update_focused_file.update_root.enable = false
+lvim.builtin.nvimtree.setup.update_focused_file.update_cwd = false
+lvim.builtin.project.manual_mode = true
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
@@ -230,6 +240,7 @@ require('treesitter-context').setup({
 	multiline_threshold = 20,
 	trim_scope = 'outer',
 	mode = 'cursor',
+	separator = '─',
 	zindex = 20
 })
 
@@ -333,7 +344,7 @@ lvim.plugins = {
 	{ "tobshub/vim-monokai-tasty" },
 	{ "Mofiqul/vscode.nvim" },
 	{ "nvim-treesitter/nvim-treesitter-context" },
-	{ "marko-cerovac/material.nvim" }
+	{ "marko-cerovac/material.nvim" },
 	-- {
 	-- 	"nvim-telescope/telescope-fzy-native.nvim",
 	-- 	build = "make",
@@ -355,6 +366,7 @@ vim.api.nvim_create_autocmd("BufEnter", {
 		vim.opt_local.shiftwidth = 4
 	end
 })
+
 
 -- turn off nvim-navic in astro files
 vim.api.nvim_create_autocmd("BufEnter", {
