@@ -3,25 +3,6 @@ lvim.log.level = "warn"
 lvim.format_on_save = false
 lvim.colorscheme = "tsodingbuddy"
 
--- vim.g.material_style = "darker"
-
--- require('material').setup({
--- 	contrast = {
--- 		terminal = true,
--- 		sidebars = true,
--- 		floating_windows = true,
--- 		non_current_windows = false,
--- 	},
--- 	plugins = {
--- 		"nvim-cmp", "nvim-tree", "nvim-web-devicons",
--- 		"dap", "dashboard", "gitsigns", "telescope", "which-key"
--- 	},
--- 	high_visibility = {
--- 		darker = true
--- 	},
--- 	lualine_style = "stealth"
--- })
-
 require("colorbuddy").colorscheme("tsodingbuddy")
 require("colorizer").setup()
 
@@ -29,12 +10,12 @@ vim.opt.relativenumber = true
 vim.opt.termguicolors = true
 vim.opt.titlestring = "NVIM %F"
 vim.opt.sidescrolloff = 2
-vim.opt.scrolloff = 5
+vim.opt.scrolloff = 2
 vim.opt.clipboard = "unnamed"
 vim.opt.background = "dark"
 vim.opt.shell = "/usr/bin/zsh"
 vim.opt.colorcolumn = "80"
-vim.opt.expandtab = false
+vim.opt.expandtab = true
 
 vim.opt.list = true
 vim.opt.listchars:append("extends:<")
@@ -52,6 +33,7 @@ lvim.builtin.illuminate.active = false
 vim.diagnostic.config({ virtual_text = false, float = { border = "single" } })
 
 lvim.builtin.cmp.formatting.max_width = 40
+lvim.builtin.cmp.performance = { debounce = 10, throttle = 5 }
 lvim.builtin.cmp.window.completion.border = "single"
 -- lvim.builtin.cmp.window.completion.winhighlight = "Normal:Pmenu"
 lvim.builtin.cmp.window.documentation.border = "single"
@@ -61,7 +43,7 @@ lvim.builtin.luasnip.sources.friendly_snippets = false
 lvim.builtin.cmp.cmdline.enable = true
 
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-	vim.lsp.handlers.hover, { border = "single" }
+  vim.lsp.handlers.hover, { border = "single" }
 )
 
 lvim.builtin.terminal.direction = "horizontal"
@@ -91,6 +73,9 @@ lvim.builtin.telescope.theme = nil
 -- 	preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 -- }
 
+lvim.builtin.telescope.defaults.path_display = { }
+lvim.builtin.telescope.pickers.live_grep.only_sort_text = false
+
 -- lvim.builtin.telescope.on_config_done = function(telescope)
 -- 	pcall(telescope.load_extension, "fzy-native")
 -- end
@@ -104,29 +89,29 @@ vim.g.codeium_no_map_tab = true
 
 local mndap = require("mason-nvim-dap")
 mndap.setup({
-	handlers = {
-		function(config)
-			mndap.default_setup(config)
-		end
-	}
+  handlers = {
+    function(config)
+      mndap.default_setup(config)
+    end
+  }
 })
 
 local mlspconf = require("mason-lspconfig")
 mlspconf.setup_handlers({
-	function(server_name)
-		require("lvim.lsp.manager").setup(server_name, {})
-	end,
-	["rust_analyzer"] = function()
-		require("lvim.lsp.manager").setup("rust_analyzer", {
-			settings = {
-				["rust-analyzer"] = {
-					check = {
-						command = "clippy",
-					},
-				}
-			}
-		})
-	end
+  function(server_name)
+    require("lvim.lsp.manager").setup(server_name, {})
+  end,
+  ["rust_analyzer"] = function()
+    require("lvim.lsp.manager").setup("rust_analyzer", {
+      settings = {
+        ["rust-analyzer"] = {
+          check = {
+            command = "clippy",
+          },
+        }
+      }
+    })
+  end
 })
 
 -- lvim.builtin.lualine.options.theme = "auto"
@@ -134,7 +119,7 @@ local lualinecmpnts = require("lvim.core.lualine.components")
 lvim.builtin.lualine.style = "lvim"
 lvim.builtin.lualine.sections.lualine_a = { "mode" }
 lvim.builtin.lualine.sections.lualine_c = {
-	lualinecmpnts.diff, { "filename", path = 3 }
+  lualinecmpnts.diff, { "filename", path = 3 }
 }
 lvim.builtin.lualine.sections.lualine_x = { lualinecmpnts.diagnostics }
 
@@ -153,48 +138,44 @@ vim.keymap.set("v", "<S-y>", "\"+y", { noremap = true })
 vim.keymap.set("n", "<C-;>", "q:")
 
 lvim.builtin.which_key.mappings["l"]["f"] = {
-	function()
-		require("lvim.lsp.utils").format { timeout_ms = 2000 }
-	end,
-	"Format",
+  function()
+    require("lvim.lsp.utils").format { timeout_ms = 2000 }
+  end,
+  "Format",
 }
 
--- lvim.builtin.which_key.mappings["t"] = {
---   name = "Terminal",
---   t = {
---     ":term<cr>",
---     "Open new terminal tab"
---   },
---   r = {
---     ":.w !zsh<cr>",
---     "Run current line"
---   }
--- }
+lvim.builtin.which_key.mappings["t"] = {
+  name = "Terminal",
+  t = {
+    ":term<cr>",
+    "Open new terminal tab"
+  },
+  r = {
+    ":.w !zsh<cr>",
+    "Run current line"
+  }
+}
 
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true })
 vim.keymap.set("n", "<C-cr>", function()
-	local win = vim.api.nvim_get_current_win()
-	local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
-	if (name == nil or name == "") then
-		local key = vim.api.nvim_replace_termcodes("<cr>", true, false, true)
-		vim.api.nvim_feedkeys(key, "n", false)
-		vim.api.nvim_create_autocmd("BufLeave", {
-			once = true,
-			callback = function()
-				vim.api.nvim_win_close(win, true)
-			end,
-		})
-	end
+  local win = vim.api.nvim_get_current_win()
+  local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
+  if (name == nil or name == "") then
+    local key = vim.api.nvim_replace_termcodes("<cr>", true, false, true)
+    vim.api.nvim_feedkeys(key, "n", false)
+    vim.api.nvim_create_autocmd("BufLeave", {
+      once = true,
+      callback = function()
+        vim.api.nvim_win_close(win, true)
+      end,
+    })
+  end
 end, { noremap = true })
 
 -- unmap a default keymapping
 -- vim.keymap.del("n", "<C-Up>")
 -- override a default keymapping
 -- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
-
--- Change theme settings
--- lvim.builtin.theme.options.dim_inactive = true
--- lvim.builtin.theme.options.style = "storm"
 
 lvim.builtin.alpha.active = true
 lvim.builtin.alpha.mode = "dashboard"
@@ -215,33 +196,33 @@ lvim.builtin.project.manual_mode = true
 
 -- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
-	"bash",
-	"c",
-	"javascript",
-	"json",
-	"lua",
-	"python",
-	"typescript",
-	"tsx",
-	"css",
-	"rust",
-	"yaml",
-	"html",
+  "bash",
+  "c",
+  "javascript",
+  "json",
+  "lua",
+  "python",
+  "typescript",
+  "tsx",
+  "css",
+  "rust",
+  "yaml",
+  "html",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 
 require('treesitter-context').setup({
-	enable = true,
-	max_lines = 4,
-	min_window_height = 0,
-	line_numbers = true,
-	multiline_threshold = 20,
-	trim_scope = 'outer',
-	mode = 'cursor',
-	separator = '─',
-	zindex = 20
+  enable = true,
+  max_lines = 4,
+  min_window_height = 0,
+  line_numbers = true,
+  multiline_threshold = 20,
+  trim_scope = 'outer',
+  mode = 'cursor',
+  separator = '─',
+  zindex = 20
 })
 
 
@@ -274,7 +255,7 @@ require('treesitter-context').setup({
 -- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
 -- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
 lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
-	return server ~= "eslintls"
+  return server ~= "eslintls"
 end, lvim.lsp.automatic_configuration.skipped_servers)
 
 -- -- you can set a custom on_attach function that will be used for all the language servers
@@ -291,17 +272,17 @@ end, lvim.lsp.automatic_configuration.skipped_servers)
 -- -- set a formatter, this will override the language server formatting capabilities (if it exists)
 local formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
-	-- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
-	{
-		command = "prettier",
-		---@usage arguments to pass to the formatter
-		-- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
-		{ "--print-width", "120" },
-		---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
-		filetypes = { "astro", "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss", "sass",
-			"yaml", "json", "mdx", "md", "vue" },
-	},
-	{ command = "gofumpt", { "-lw" }, filetypes = { "go" } },
+  -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+  {
+    command = "prettier",
+    ---@usage arguments to pass to the formatter
+    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+    { "--print-width", "120" },
+    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+    filetypes = { "astro", "typescript", "typescriptreact", "javascript", "javascriptreact", "css", "scss", "sass",
+      "yaml", "json", "mdx", "md", "vue" },
+  },
+  { command = "gofumpt", { "-lw" }, filetypes = { "go" } },
 }
 
 -- -- set additional linters
@@ -324,55 +305,59 @@ formatters.setup {
 
 -- Additional Plugins
 lvim.plugins = {
-	{ "windwp/nvim-ts-autotag" },
-	{ "RRethy/nvim-base16" },
-	{ "tjdevries/colorbuddy.nvim" },
-	{ "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
-	{ "norcalli/nvim-colorizer.lua" },
-	{
-		"Exafunction/codeium.vim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"hrsh7th/nvim-cmp",
-		},
-		config = function()
-			vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
-		end
-	},
-	{ "jay-babu/mason-nvim-dap.nvim",           dependencies = "williamboman/mason.nvim" },
-	{ "williamboman/mason-lspconfig.nvim",      dependencies = "williamboman/mason.nvim" },
-	{ "tobshub/vim-monokai-tasty" },
-	{ "Mofiqul/vscode.nvim" },
-	{ "nvim-treesitter/nvim-treesitter-context" },
-	{ "marko-cerovac/material.nvim" },
-	-- {
-	-- 	"nvim-telescope/telescope-fzy-native.nvim",
-	-- 	build = "make",
-	-- 	event = "BufRead"
-	-- },
+  {
+    "windwp/nvim-ts-autotag",
+    config = function() require("nvim-ts-autotag").setup() end
+  },
+  { "RRethy/nvim-base16" },
+  { "tjdevries/colorbuddy.nvim" },
+  { "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
+  { "norcalli/nvim-colorizer.lua" },
+  {
+    "Exafunction/codeium.vim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      vim.keymap.set("i", '<C-S-Space>', function() return vim.fn['codeium#Accept']() end, { expr = true })
+    end
+  },
+  { "jay-babu/mason-nvim-dap.nvim",           dependencies = "williamboman/mason.nvim" },
+  { "williamboman/mason-lspconfig.nvim",      dependencies = "williamboman/mason.nvim" },
+  { "tobshub/vim-monokai-tasty" },
+  { "Mofiqul/vscode.nvim" },
+  { "nvim-treesitter/nvim-treesitter-context" },
+  { "marko-cerovac/material.nvim" },
+  { "rose-pine/neovim",                       name = "rose-pine" },
+  -- {
+  -- 	"nvim-telescope/telescope-fzy-native.nvim",
+  -- 	build = "make",
+  -- 	event = "BufRead"
+  -- },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.json", "*.jsonc", ".env", "*.md", "*txt" },
-	command = "setlocal wrap",
+  pattern = { "*.json", "*.jsonc", ".env", "*.md", "*txt" },
+  command = "setlocal wrap",
 })
 
 -- set tabstop and shiftwidth to 4
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.go", "*.c", "*.h", "*.cpp", "*.hpp", "*.cc", "*.cxx", "*.rs" },
-	callback = function()
-		vim.opt_local.tabstop = 4
-		vim.opt_local.shiftwidth = 4
-	end
+  pattern = { "*.go", "*.c", "*.h", "*.cpp", "*.hpp", "*.cc", "*.cxx", "*.rs" },
+  callback = function()
+    vim.opt_local.tabstop = 4
+    vim.opt_local.shiftwidth = 4
+  end
 })
 
 
 -- turn off nvim-navic in astro files
 vim.api.nvim_create_autocmd("BufEnter", {
-	pattern = { "*.astro" },
-	callback = function()
-		lvim.builtin.breadcrumbs.active = false
-		vim.g.navic_silence = true
-	end
+  pattern = { "*.astro" },
+  callback = function()
+    lvim.builtin.breadcrumbs.active = false
+    vim.g.navic_silence = true
+  end
 })
