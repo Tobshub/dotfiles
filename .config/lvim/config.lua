@@ -1,17 +1,15 @@
 -- general
 lvim.log.level = "warn"
 lvim.format_on_save = false
-lvim.colorscheme = "tsodingbuddy"
+lvim.colorscheme = "no-clown-fiesta"
 
-require("colorbuddy").colorscheme("tsodingbuddy")
-require("colorizer").setup()
 
 vim.opt.relativenumber = true
 vim.opt.termguicolors = true
 vim.opt.titlestring = "NVIM %F"
 vim.opt.sidescrolloff = 2
 vim.opt.scrolloff = 2
-vim.opt.clipboard = "unnamed"
+vim.opt.clipboard = ""
 vim.opt.background = "dark"
 vim.opt.shell = "/usr/bin/zsh"
 vim.opt.colorcolumn = "80"
@@ -73,7 +71,7 @@ lvim.builtin.telescope.theme = nil
 -- 	preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 -- }
 
-lvim.builtin.telescope.defaults.path_display = { }
+lvim.builtin.telescope.defaults.path_display = {}
 lvim.builtin.telescope.pickers.live_grep.only_sort_text = false
 
 -- lvim.builtin.telescope.on_config_done = function(telescope)
@@ -87,32 +85,32 @@ vim.opt.foldlevel = 99
 -- codeium
 vim.g.codeium_no_map_tab = true
 
-local mndap = require("mason-nvim-dap")
-mndap.setup({
-  handlers = {
-    function(config)
-      mndap.default_setup(config)
-    end
-  }
-})
+-- local mndap = require("mason-nvim-dap")
+-- mndap.setup({
+--   handlers = {
+--     function(config)
+--       mndap.default_setup(config)
+--     end
+--   }
+-- })
 
-local mlspconf = require("mason-lspconfig")
-mlspconf.setup_handlers({
-  function(server_name)
-    require("lvim.lsp.manager").setup(server_name, {})
-  end,
-  ["rust_analyzer"] = function()
-    require("lvim.lsp.manager").setup("rust_analyzer", {
-      settings = {
-        ["rust-analyzer"] = {
-          check = {
-            command = "clippy",
-          },
-        }
-      }
-    })
-  end
-})
+-- local mlspconf = require("mason-lspconfig")
+-- mlspconf.setup_handlers({
+--   function(server_name)
+--     require("lvim.lsp.manager").setup(server_name, {})
+--   end,
+--   ["rust_analyzer"] = function()
+--     require("lvim.lsp.manager").setup("rust_analyzer", {
+--       settings = {
+--         ["rust-analyzer"] = {
+--           check = {
+--             command = "clippy",
+--           },
+--         }
+--       }
+--     })
+--   end
+-- })
 
 -- lvim.builtin.lualine.options.theme = "auto"
 local lualinecmpnts = require("lvim.core.lualine.components")
@@ -156,7 +154,7 @@ lvim.builtin.which_key.mappings["t"] = {
   }
 }
 
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { noremap = true })
+vim.keymap.set("t", "<C-Esc>", "<C-\\><C-n>", { noremap = true })
 vim.keymap.set("n", "<C-cr>", function()
   local win = vim.api.nvim_get_current_win()
   local name = vim.api.nvim_buf_get_name(vim.api.nvim_win_get_buf(win))
@@ -214,15 +212,15 @@ lvim.builtin.treesitter.ignore_install = { "haskell" }
 lvim.builtin.treesitter.highlight.enable = true
 
 require('treesitter-context').setup({
-  enable = true,
+  -- enable = true,
   max_lines = 4,
-  min_window_height = 0,
-  line_numbers = true,
-  multiline_threshold = 20,
+  -- min_window_height = 0,
+  -- line_numbers = true,
+  -- multiline_threshold = 20,
   trim_scope = 'outer',
-  mode = 'cursor',
+  -- mode = 'cursor',
   separator = '─',
-  zindex = 20
+  -- zindex = 20
 })
 
 
@@ -309,10 +307,10 @@ lvim.plugins = {
     "windwp/nvim-ts-autotag",
     config = function() require("nvim-ts-autotag").setup() end
   },
-  { "RRethy/nvim-base16" },
-  { "tjdevries/colorbuddy.nvim" },
-  { "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
-  { "norcalli/nvim-colorizer.lua" },
+  -- { "RRethy/nvim-base16" },
+  -- { "tjdevries/colorbuddy.nvim" },
+  -- { "tobshub/tsodingbuddy",       dependencies = "tjdevries/colorbuddy.nvim" },
+  -- { "norcalli/nvim-colorizer.lua" },
   {
     "Exafunction/codeium.vim",
     dependencies = {
@@ -325,16 +323,18 @@ lvim.plugins = {
   },
   { "jay-babu/mason-nvim-dap.nvim",           dependencies = "williamboman/mason.nvim" },
   { "williamboman/mason-lspconfig.nvim",      dependencies = "williamboman/mason.nvim" },
-  { "tobshub/vim-monokai-tasty" },
-  { "Mofiqul/vscode.nvim" },
+  -- { "tobshub/vim-monokai-tasty" },
+  -- { "Mofiqul/vscode.nvim" },
   { "nvim-treesitter/nvim-treesitter-context" },
-  { "marko-cerovac/material.nvim" },
-  { "rose-pine/neovim",                       name = "rose-pine" },
+  -- { "marko-cerovac/material.nvim" },
+  -- { "rose-pine/neovim",                       name = "rose-pine" },
   -- {
   -- 	"nvim-telescope/telescope-fzy-native.nvim",
   -- 	build = "make",
   -- 	event = "BufRead"
   -- },
+  { "aktersnurra/no-clown-fiesta.nvim" },
+  { "wakatime/vim-wakatime",                  lazy = false },
 }
 
 -- Autocommands (https://neovim.io/doc/user/autocmd.html)
