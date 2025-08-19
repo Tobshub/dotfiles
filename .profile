@@ -9,7 +9,6 @@ export EDITOR="/home/tobs/.local/bin/nvim"
 alias x="clear"
 alias lg="lazygit"
 alias g="git --no-pager"
-alias docker="sudo docker"
 
 alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
